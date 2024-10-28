@@ -1,6 +1,5 @@
-[ {"description":"katla","level":"public"} 
-, {"description":"counterpart","level":"public"} 
-, {"description":"marley and me","level":"private"} 
-, {"description":"daniel tiger","level":"follower"} 
-, {"description":"lupin","level":"follower"} 
+[ {"description":"katla","price":22,"level":"public"} 
+, {"description":"counterpart","price":30,"level":"public"} 
+, {"description":"marley and me","price":300,"level":"private"} 
+, {"description":"daniel tiger XXX","price":300,"level":"follower"} 
 ]

@@ -57,12 +57,13 @@ instance FromJSON AuthInfo where
 -------------------------------------------------------------------------------------- 
 data ItemData = ItemData
   { itemDescription :: Text
+  , itemPrice       :: Int
   , itemLevel       :: String
   }
   deriving (Show, Generic)
 
-mkItemData :: Text -> String -> ItemData
-mkItemData descr levl = ItemData (strip descr) (sStrip levl)
+mkItemData :: Text -> Int -> String -> ItemData
+mkItemData descr price levl = ItemData (strip descr) price (sStrip levl)
 
 instance FromJSON ItemData where
   parseJSON = genericParseJSON (stripPrefix "item")

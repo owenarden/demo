@@ -4,6 +4,15 @@ import Data.Text       (Text)
 ------------------------------------------------------------------------------------------
 predicate follows :: UserId -> UserId -> Bool
 
+policy IsSubscriber = \follower viewer ->
+  followerSubscriber follower == entityKey viewer
+
+policy IsPublisher = \follower viewer ->
+  followerPublisher follower == entityKey viewer
+
+policy IsPending = \follower viewer ->
+  followerSubscriber follower == entityKey viewer && followerStatus follower == " pending "
+
 policy IsOwner = \item viewer ->
   itemOwner item == entityKey viewer
 
@@ -25,13 +34,19 @@ User
 Item
   owner         UserId
   description   Text
+  price         Int
   level         String
 
-  read   [ description ] { \item viewer -> IsOwner item viewer || IsPublic item || IsFollower item viewer }
+  read   [ description,price ] { \item viewer -> IsOwner item viewer || IsPublic item || IsFollower item viewer }
+  insert @IsOwner
+  update [ owner, level, description ] { \old new viewer -> IsOwner old viewer }
 
 Follower
   subscriber    UserId
   publisher     UserId
   status        String
 
-  assert        {status == "accepted" => follows subscriber publisher}
+  assert {status == "accepted" => follows subscriber publisher}
+  -- read   [publisher] { \follower viewer -> IsSubscriber follower viewer}
+  insert @IsPending
+  update [ status ] { \old new viewer -> IsPublisher old viewer }
